@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
+use App\Models\Role;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -64,10 +65,24 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        /**
+         * getRoleId are rolul de a prelua id-ul pentru pacient. In cazul in care id-ul ar fi hardcodat, daca ulterior s-ar face 
+         * odificari (stergeri, adaugari de roluri) role_id ar primi un id gresit.
+        */
+        $getRoleId = Role::where('name','patient')->first();
         return User::create([
+            /**
+             * Laravel a setat ca default name, email si password.
+             */
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+
+            /**
+             * A trebuit sa setez in plus role_id si gender.
+             */
+            'role_id' => $getRoleId,
+            'gender'=> $data['gender']
         ]);
     }
 }
