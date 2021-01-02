@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class DoctorController extends Controller
 {
@@ -79,7 +80,8 @@ class DoctorController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        return view('admin.doctor.delete', compact('user'));
     }
 
     /**
@@ -137,7 +139,25 @@ class DoctorController extends Controller
      */
     public function destroy($id)
     {
-        //
+        /**
+         * Trebuie sa ne asiguram ca persoana care face stergerea nu se sterge pe sine din baza de date
+         */
+
+        if(Auth::check())
+        {
+            abort(401);
+        }
+
+        /**
+         * Ne asiguram ca s-a sters si poza de profil
+         */
+        $user = User::find($id);
+        $userDelete = $user->delete();
+        if($userDelete){
+            unlink(public_path('images/'.$user->image));
+        }
+
+        return redirect()->route('doctor.index')->with('mesajStergereSuccess','Persoana a fost stearsa cu succes!');
     }
 
     public function validatationUpdate($request, $id)

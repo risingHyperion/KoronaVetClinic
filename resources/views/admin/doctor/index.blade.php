@@ -40,6 +40,12 @@
             </div>
         @endif
 
+        @if(Session::has('mesajStergereSuccess'))
+            <div class="alert bg-success alert-success text-white" role="alert">
+                {{Session::get('mesajStergereSuccess')}}
+            </div>
+        @endif
+
         <div class="card">
             <div class="card-header"><h3>Lista medici</h3></div>
             <div class="card-body">
