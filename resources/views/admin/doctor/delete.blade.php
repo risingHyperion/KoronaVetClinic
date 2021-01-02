@@ -51,12 +51,11 @@
                         <!-- Tokenul csrf oferit de Laravel ne ajuta sa ne protejam aplicatia/site-ul impotriva artacurilor de tip "cross-site request forgery" -->
                         @csrf
 
-                        <!-- Sectiunea de final cu butoane de Adauga sau Renunta --> 
+                        <!-- Sectiunea de final cu butoane de Sterge sau Renunta --> 
                         <div class="card-footer">
                             <button type="submit" class="btn btn-danger mr-2">Confirma</button>
                             <a href="{{route('doctor.index')}}" class="btn btn-secondary">
-                                Cancel
-                              
+                                Renunta
                             </a>
                         </div>
                         
