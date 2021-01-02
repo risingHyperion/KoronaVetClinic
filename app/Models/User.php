@@ -49,4 +49,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    # Stabilim faptul ca fiecare doctor poate avea un singur rol: doctor SAU admin
+    public function role() {
+        return $this->hasOne('App\Models\Role', 'id', 'role_id');
+    }
 }
