@@ -90,7 +90,8 @@ class DoctorController extends Controller
      */
     public function edit($id)
     {
-        //
+        $user = User::find($id);
+        return view('admin.doctor.edit', compact('user'));
     }
 
     /**

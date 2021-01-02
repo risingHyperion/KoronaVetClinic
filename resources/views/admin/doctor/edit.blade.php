@@ -8,7 +8,7 @@
                     <i class="ik ik-edit bg-blue"></i>
                     <div class="d-inline">
                         <h5>Medici</h5>
-                        <span>Sectiunea pentru adaugarea de medici in baza de date.</span>
+                        <span>Sectiunea pentru modificarea datelor</span>
                     </div>
                 </div>
             </div>
@@ -37,24 +37,26 @@
 
             <div class="card">
                 <div class="card-header">
-                    <h2>Adauga un medic</h2>
+                    <h2>Modifica</h2>
                 </div>
 
                 <div class="card-body">
 
-                    <!-- Formularul trebuie sa salveze datele introduse in baza de date, deci la action vom avea doctor.store -->
+                    <!-- Vom folosi route('doctor.update') pentru a modifica datele -->
                     <!-- Metoda folosita pentru salvarea in baza de date este POST -->
                     <!-- multipart/form-data este necesar deoarece dorim sa facem upload pentru un fisier de tip imagine -->
-                    <form enctype="multipart/form-data" method="POST" action="{{ route('doctor.store') }}" class="forms-sample">
+                    <form enctype="multipart/form-data" method="POST" action="{{ route('doctor.update', [$user -> id]) }}" class="forms-sample">
 
                         <!-- Tokenul csrf oferit de Laravel ne ajuta sa ne protejam aplicatia/site-ul impotriva artacurilor de tip "cross-site request forgery" -->
                         @csrf
 
+                        <!-- Specificam metoda ca fiind PUT deoarece in HTML avem doar POST ceea ce nu este ce ne trebuie in acest caz in care dorim sa editam ceva -->
+                        @method('PUT')
                         <!-- Sectiunea pentru numele si adresa de email a doctorului -->
                         <div class="row">
                             <div class="col-lg-6">
                                 <label for="">Nume complet</label>
-                                <input type="text" value="{{ old('name') }}" name="name" class="form-control @error('name') is valid @enderror" placeholder="ex: Ion Popescu">
+                                <input type="text" value="{{ $user -> name }}" name="name" class="form-control @error('name') is valid @enderror" placeholder="ex: Ion Popescu">
 
                                 <!-- Functia de validare pentru nume -->
                                 @error('name')
@@ -66,7 +68,7 @@
 
                             <div class="col-lg-6">
                                 <label for="">Adresa email</label>
-                                <input type="email" value="{{ old('email') }}" name="email" class="form-control  @error('email') is valid @enderror" placeholder="ex: ion.popescu@gmail.com">
+                                <input type="email" value="{{ $user -> email }}" name="email" class="form-control  @error('email') is valid @enderror" placeholder="ex: ion.popescu@gmail.com">
                                 <br>
 
                                 <!-- Functia de validare pentru email -->
@@ -82,7 +84,7 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <label for="">Parola</label>
-                                <input type="password" value="{{ old('password') }}" name="password" class="form-control  @error('password') is valid @enderror" placeholder="parola">
+                                <input type="password" value="{{ $user -> password }}" name="password" class="form-control  @error('password') is valid @enderror" placeholder="parola">
 
                                 <!-- Functia de validare pentru parola -->
                                 @error('password')
@@ -94,10 +96,17 @@
 
                             <div class="col-lg-6">
                                 <label for="">Gen</label>
-                                <select name="gender" value="{{ old('gender') }}" class="form-control  @error('gender') is valid @enderror">
-                                    <option value="">Alege un gen</option>
-                                    <option value="male">Barbat</option>
-                                    <option value="female">Femeie</option>
+                                <select name="gender" value="{{ $user -> gender }}" class="form-control  @error('gender') is valid @enderror">
+
+                                    <!-- Trebuie sa specificam faptul ca genul din baza de date trebuie sa ramana selectat -->
+                                    @foreach(['barbat','femeie'] as $gender)
+                                        <option value="{{$gender}}"
+                                            @if($user -> gender == $gender)
+                                                selected
+                                            @endif>
+                                                {{$gender}}
+                                        </option>
+                                    @endforeach
                                 </select>
                                 <br>
 
@@ -114,7 +123,7 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <label for="">Educatie</label>
-                                <input type="text" value="{{ old('education') }}" name="education" class="form-control  @error('education') is valid @enderror" placeholder="ex: Diploma de masterat">
+                                <input type="text" value="{{ $user -> education }}" name="education" class="form-control  @error('education') is valid @enderror" placeholder="ex: Diploma de masterat">
 
                                 <!-- Functia de validare pentru educatie -->
                                 @error('education')
@@ -126,7 +135,7 @@
 
                             <div class="col-lg-6">
                                 <label for="">Adresa domiciliu</label>
-                                <input type="text" value="{{ old('address') }}" name="address" class="form-control  @error('adress') is valid @enderror" placeholder="ex: Str. Principala Nr.2, Brasov, jud. Brasov">
+                                <input type="text" value="{{ $user -> address }}" name="address" class="form-control  @error('adress') is valid @enderror" placeholder="ex: Str. Principala Nr.2, Brasov, jud. Brasov">
                                 <br>
 
                                 <!-- Functia de validare pentru adresa de domiciliu -->
@@ -139,14 +148,19 @@
                         </div>
 
                         <!-- Sectiunea pentru specializare si numar de telefon -->
+                        <!-- Trebuie sa specificam faptul ca departamentul din baza de date trebuie sa ramana selectat -->
                         <div class="row">
                             <div class="col-lg-6">
                                 <label for="">Departament</label>
                                 <select name="department" value="" class="form-control  @error('gender') is valid @enderror">
-                                    <option value="">Alege un departament</option>
-                                    <option value="internal">Medicina interna</option>
-                                    <option value="surgery">Chirurgie</option>
-                                    <option value="dermatology">Dermatologie</option>
+                                    @foreach(['medicina interna','chirurgie', 'dermatologie'] as $department)
+                                        <option value="{{$department}}"
+                                            @if($user -> department == $department)
+                                                selected
+                                            @endif>
+                                                {{$department}}
+                                        </option>
+                                    @endforeach
                                 </select>
 
                                 <!-- Functia de validare pentru specializare -->
@@ -159,7 +173,7 @@
 
                             <div class="col-lg-6">
                                 <label for="">Numar de telefon</label>
-                                <input type="text" value="{{ old('phone_number') }}" name="phone_number" class="form-control  @error('phone_number') is valid @enderror" placeholder="ex: 07XXXXXXXX">
+                                <input type="text" value="{{ $user -> phone_number }}" name="phone_number" class="form-control  @error('phone_number') is valid @enderror" placeholder="ex: 07XXXXXXXX">
                                 <br>
 
                                 <!-- Functia de validare pentru numar de telefon -->
@@ -174,7 +188,7 @@
                         <!-- Sectiunea pentru adaugarea unei descrieri -->
                         <div class="form-group">
                             <label for="exampleTextarea1">Despre</label>
-                            <textarea name="description" id="exampleTextarea1" rows="4" class="form-control @error('description') is valid @enderror">{{ old('description') }}</textarea>
+                            <textarea name="description" id="exampleTextarea1" rows="4" class="form-control @error('description') is valid @enderror">{{ $user -> description }}</textarea>
 
                             <!-- Functia de validare pentru descriere -->
                             @error('description')
@@ -210,8 +224,12 @@
                                     <option value="">Alegeti rolul</option>
 
                                     <!-- Doctorul poate fi si administrator, insa nu dorim sa fie pacient, asa ca eliminam aceasta posibilitate -->
+                                     <!-- Trebuie sa specificam faptul ca rolul din baza de date trebuie sa ramana selectat -->
                                     @foreach(App\Models\Role::where('name', '!=', 'patient') -> get() as $role)
-                                        <option value="{{ $role->id }}">
+                                        <option value="{{ $role->id }}"
+                                            @if($user -> role_id == $role -> id)
+                                                selected
+                                            @endif>
                                             {{ $role -> name }}
                                         </option>
                                     @endforeach
