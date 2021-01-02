@@ -33,6 +33,13 @@
 
 <div class="row">
     <div class="col-md-12">
+
+        @if(Session::has('mesajUpdateSucces'))
+            <div class="alert bg-success alert-success text-white" role="alert">
+                {{Session::get('mesajUpdateSucces')}}
+            </div>
+        @endif
+
         <div class="card">
             <div class="card-header"><h3>Lista medici</h3></div>
             <div class="card-body">

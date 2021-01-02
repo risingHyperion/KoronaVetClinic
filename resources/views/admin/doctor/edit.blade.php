@@ -250,7 +250,7 @@
 
                         <!-- Sectiunea de final cu butoane de Adauga sau Renunta --> 
                         <div class="row">
-                            <button class="btn btn-primary mr-4">Adauga</button>
+                            <button class="btn btn-primary mr-4">Modifica</button>
                             <button class="btn btn-light">Renunta</button>
                         </div>
                         
